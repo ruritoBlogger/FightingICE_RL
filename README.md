@@ -1,0 +1,2 @@
+# FightingICE_RL
+FightingICEを用いた格ゲーのAIを深層強化学習を用いて実装する
