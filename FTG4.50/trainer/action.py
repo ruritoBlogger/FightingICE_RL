@@ -1,6 +1,6 @@
-from enum import Enum, auto
+from enum import IntEnum, auto
 
-class Action(Enum):
+class Action(IntEnum):
     """ エージェントが実施できる行動 """
 
     AIR = auto()
