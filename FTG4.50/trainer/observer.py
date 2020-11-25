@@ -31,7 +31,7 @@ class Observer(object):
         # TODO: 添字が合っているかどうか確認する
         for i in range(56):
             if frame_data[i+8]:
-                data["self"]["currentAction"] = i+8
+                data["self"]["State"] = i+8
                 break
 
         data["self"]["RemainingFrame"] = frame_data[63]
@@ -47,7 +47,7 @@ class Observer(object):
 
         for i in range(56):
             if frame_data[i+72]:
-                data["self"]["currentAction"] = i+72
+                data["self"]["State"] = i+72
                 break
 
         data["opp"]["RemainingFrame"] = frame_data[127]
