@@ -4,7 +4,7 @@ from observer import Observer
 from rolebaseAgent import RoleBaseAgent
 
 def main():
-    env = gym.make("FightingiceDataNoFrameskip-v0", java_env_path="/home/troll/lesson/ken/FTG4.50")
+    env = gym.make("FightingiceDataNoFrameskip-v0", java_env_path="/home/rurito/lesson/ken/FTG4.50")
 
     frame_data = env.reset(p2="MctsAi")
     observer = Observer()
