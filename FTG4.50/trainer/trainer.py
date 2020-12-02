@@ -12,7 +12,7 @@ def main():
     done = False
     
     while not done:
-        action = agent.get_action(frame_data)
+        action = agent.get_action(frame_data, env.get_observation_space())
         frame_data, reward, done, info = env.step(action)
 
 if __name__ == "__main__":
