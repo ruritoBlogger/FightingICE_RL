@@ -27,51 +27,42 @@ class Observer(object):
         data["self"]["AbsSpeedX"] = frame_data[5]
         data["self"]["SpeedY"] = 0 if frame_data[6] < 0 else 1
         data["self"]["AbsSpeedY"] = frame_data[7]
+        data["self"]["CurrentAction"] = frame_data[8]
+        data["self"]["State"] = frame_data[9]
+        data["self"]["RemainingFrame"] = frame_data[10]
 
-        # TODO: 添字が合っているかどうか確認する
-        for i in range(56):
-            if frame_data[i+8]:
-                data["self"]["State"] = i+8
-                break
+        data["opp"]["HP"] = frame_data[11]
+        data["opp"]["Energy"] = frame_data[12]
+        data["opp"]["X"] = frame_data[13]
+        data["opp"]["Y"] = frame_data[14]
+        data["opp"]["SpeedX"] = 0 if frame_data[15] < 0 else 1
+        data["opp"]["AbsSpeedX"] = frame_data[16]
+        data["opp"]["SpeedY"] = 0 if frame_data[17] < 0 else 1
+        data["opp"]["AbsSpeedY"] = frame_data[18]
+        data["opp"]["CurrentAction"] = frame_data[19]
+        data["opp"]["State"] = frame_data[20]
+        data["opp"]["RemainingFrame"] = frame_data[21]
 
-        data["self"]["RemainingFrame"] = frame_data[63]
-
-        data["opp"]["HP"] = frame_data[64]
-        data["opp"]["Energy"] = frame_data[65]
-        data["opp"]["X"] = frame_data[66]
-        data["opp"]["Y"] = frame_data[67]
-        data["opp"]["SpeedX"] = 0 if frame_data[68] < 0 else 1
-        data["opp"]["AbsSpeedX"] = frame_data[69]
-        data["opp"]["SpeedY"] = 0 if frame_data[70] < 0 else 1
-        data["opp"]["AbsSpeedY"] = frame_data[71]
-
-        for i in range(56):
-            if frame_data[i+72]:
-                data["self"]["State"] = i+72
-                break
-
-        data["opp"]["RemainingFrame"] = frame_data[127]
-
-        data["frame_run"] = frame_data[128]
+        data["frame_run"] = frame_data[22]
 
         # WARNING: 情報を取れてないと0の場合もある
-        data["self"]["HitDamage"] = frame_data[129]
-        data["self"]["HitAreaNowX"] = frame_data[130]
-        data["self"]["HitAreaNowY"] = frame_data[131]
+        data["self"]["HitDamage"] = frame_data[23]
+        data["self"]["HitAreaNowX"] = frame_data[24]
+        data["self"]["HitAreaNowY"] = frame_data[25]
 
-        # TODO: gym_ai.pyの方が謎
-        data["self"]["NextHitDamage"] = frame_data[132]
-        data["self"]["NextHitAreaNowX"] = frame_data[133]
-        data["self"]["NextHitAreaNowY"] = frame_data[134]
+        # TODO: gym_ai.pyを読んで意味を理解する
+        data["self"]["NextHitDamage"] = frame_data[26]
+        data["self"]["NextHitAreaNowX"] = frame_data[27]
+        data["self"]["NextHitAreaNowY"] = frame_data[28]
 
         # WARNING: 情報を取れてないと0の場合もある
-        data["opp"]["HitDamage"] = frame_data[135]
-        data["opp"]["HitAreaNowX"] = frame_data[136]
-        data["opp"]["HitAreaNowY"] = frame_data[137]
+        data["opp"]["HitDamage"] = frame_data[29]
+        data["opp"]["HitAreaNowX"] = frame_data[30]
+        data["opp"]["HitAreaNowY"] = frame_data[31]
 
-        # TODO: gym_ai.pyの方が謎
-        data["opp"]["NextHitDamage"] = frame_data[138]
-        data["opp"]["NextHitAreaNowX"] = frame_data[139]
-        data["opp"]["NextHitAreaNowY"] = frame_data[140]
+        # TODO: gym_ai.pyを読んで意味を理解する
+        data["opp"]["NextHitDamage"] = frame_data[32]
+        data["opp"]["NextHitAreaNowX"] = frame_data[33]
+        data["opp"]["NextHitAreaNowY"] = frame_data[34]
 
         return data
