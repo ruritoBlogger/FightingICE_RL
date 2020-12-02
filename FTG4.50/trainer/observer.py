@@ -1,10 +1,48 @@
 from typing import Dict
 import numpy as np
+from gym import spaces
+from typing import Tuple
 
 class Observer(object):
     """ gymの環境から欲しい情報を抽出する """
-    def __init__(self):
-        pass
+
+    def __init__(self, env: any, p2: any) -> None:
+        """
+        内部でenvを持つ
+
+        :param env: gymのenv
+        :param p2: 対戦相手の情報
+        """
+        self._env = env
+        self.p2 = p2
+
+    def get_observation_space(self) -> spaces:
+        """
+        画面のサイズの情報を返す
+
+        :return: 画面のサイズの情報
+        """
+        return self._env.observation_space
+
+    def step(self, action: int) -> Tuple[Dict, float, bool, any]:
+        """
+        ある状態でActionを取った直後の結果を返す
+
+        :param action: 実施したいAction
+        :return: Actionを実施した直後の次の状態, 報酬, ゲームが終了しているかどうか, その他の情報
+        """
+        n_state, reward, done, info = self._env.step(action)
+        return self.transform(n_state), reward, done, info
+
+    def reset(self) -> Dict:
+        """
+        環境を初期化する
+
+        :return: 初期化直後の状態
+        """
+
+        return self.transform(self._env.reset(p2=self.p2))
+
 
     def transform(self, frame_data: np.ndarray) -> Dict:
         """
