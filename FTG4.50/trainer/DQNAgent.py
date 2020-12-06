@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 from gym import spaces
 from tensorflow import keras
 
@@ -84,7 +84,7 @@ class DQNAgent(object):
         """
         self.model = NN(learning_rate, action_size)
 
-    def get_action(self, data: Dict, observation_space: spaces) -> Action:
+    def get_action(self, data: List[Union[int, float]], observation_space: spaces) -> Action:
         """
         現在の状態から最適な行動を求める
         :param data: 現在の状態
@@ -94,8 +94,6 @@ class DQNAgent(object):
 
         # TODO: ε-greedy法を実装する
 
-        # TODO: dataを変形する部分を組む
-        #       observerに実装する
         action_value = self.model.predict(data)
 
         # NOTE: 一番評価値が高い行動を選択する(Actionにキャストしておく)

@@ -35,10 +35,19 @@ class Trainer(object):
             done = False
             self.memory = Memory()
 
+            state_len = 0
+
             while not done:
+                # NOTE: 学習出来るように変形しておく
+                frame_data = self.env.flatten(frame_data)
+                state_len = len(frame_data)
+
                 # TODO: 毎回get_observation_spaceを実行しないようにしておく
                 action = self.agent.get_action(frame_data, self.env.get_observation_space())
                 next_frame_data, reward, done, info = self.env.step(action)
+
+                # NOTE: 学習出来るように変形しておく
+                next_frame_data = self.env.flatten(next_frame_data)
 
                 # NOTE: experience replayを実施するため試合を回しながら学習させない
                 self.memory.add((frame_data, action, reward, next_frame_data))
@@ -47,13 +56,13 @@ class Trainer(object):
 
             batch = self.memory.sample(batch_size)
 
-            # TODO: 学習させるときにenvを変形させる. その時のenvのlenを入れる
-            inputs = np.zeros((batch_size, ))
+            # NOTE: 学習させるときにenvを変形させる. その時のenvのlenを入れる
+            # FIXME: envのlenの管理方法を考える
+            inputs = np.zeros((batch_size, state_len))
             targets = np.zeros((batch_size, self.env.get_observation_space()))
 
             # ランダムに取り出した過去の行動記録から学習を実施(=experience replay)
             for j, (frame_data, action, reward, next_frame_data) in enumerate(batch):
-                # TODO: 学習させる時と同じやりかたで変形しておく
                 inputs[j: j+1] = frame_data
 
                 # TODO: [0]をつける意味を理解する
