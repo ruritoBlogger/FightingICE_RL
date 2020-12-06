@@ -92,6 +92,21 @@ class DQNAgent(object):
         :return: 行動(int)
         """
 
+        # TODO: dataを変形する部分を組む
+        #       observerに実装する
+        action_value = self.model.predict(data)
 
+        # NOTE: 一番評価値が高い行動を選択する(Actionにキャストしておく)
+        best_action = Action(action_value.index(max(action_value)))
 
+        return best_action
 
+    def update(self, data: any, label: any) -> None:
+        """
+        選手の学習を実施する
+
+        :param data: 教師データ
+        :param label: 教師ラベル
+        """
+
+        self.model.fit(data, label)
