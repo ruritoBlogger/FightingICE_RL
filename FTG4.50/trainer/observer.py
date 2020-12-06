@@ -1,7 +1,7 @@
 from typing import Dict
 import numpy as np
 from gym import spaces
-from typing import Tuple
+from typing import Tuple, List, Union
 
 class Observer(object):
     """ gymの環境から欲しい情報を抽出する """
@@ -104,3 +104,60 @@ class Observer(object):
         data["opp"]["NextHitAreaNowY"] = frame_data[34]
 
         return data
+
+    # HACK: numpyに置き換える
+    def flatten(self, data: Dict) -> List[Union[int, float]]:
+        """
+        NNに入力できるように配列に変形する
+
+        :param data: 変形したいデータ
+        :return: 変形後のデータ
+        """
+
+        # HACK: 予め配列の長さ分初期化しておいて代入する
+        #       現状だと速度が遅い
+
+        # HACK: 入力データが多いので絞り込む
+
+        result = []
+        result.append(data["self"]["HP"])
+        result.append(data["self"]["Energy"])
+        result.append(data["self"]["X"])
+        result.append(data["self"]["Y"])
+        result.append(data["self"]["SpeedX"])
+        result.append(data["self"]["AbsSpeedX"])
+        result.append(data["self"]["SpeedY"])
+        result.append(data["self"]["AbsSpeedY"])
+        result.append(data["self"]["CurrentAction"])
+        result.append(data["self"]["State"])
+        result.append(data["self"]["RemainingFrame"])
+
+        result.append(data["opp"]["HP"])
+        result.append(data["opp"]["Energy"])
+        result.append(data["opp"]["X"])
+        result.append(data["opp"]["Y"])
+        result.append(data["opp"]["SpeedX"])
+        result.append(data["opp"]["AbsSpeedX"])
+        result.append(data["opp"]["SpeedY"])
+        result.append(data["opp"]["AbsSpeedY"])
+        result.append(data["opp"]["CurrentAction"])
+        result.append(data["opp"]["State"])
+        result.append(data["opp"]["RemainingFrame"])
+
+        result.append(data["frame_run"])
+
+        result.append(data["self"]["HitDamage"])
+        result.append(data["self"]["HitAreaNowX"])
+        result.append(data["self"]["HitAreaNowY"])
+        result.append(data["self"]["NextHitDamage"])
+        result.append(data["self"]["NextHitAreaNowX"])
+        result.append(data["self"]["NextHitAreaNowY"])
+
+        result.append(data["opp"]["HitDamage"])
+        result.append(data["opp"]["HitAreaNowX"])
+        result.append(data["opp"]["HitAreaNowY"])
+        result.append(data["opp"]["NextHitDamage"])
+        result.append(data["opp"]["NextHitAreaNowX"])
+        result.append(data["opp"]["NextHitAreaNowY"])
+
+        return result
