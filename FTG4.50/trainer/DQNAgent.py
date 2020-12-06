@@ -1,8 +1,9 @@
-from action import Action
-from state import State
-from typing import Dict
+from typing import Dict, List
 from gym import spaces
 from tensorflow import keras
+
+from action import Action
+from state import State
 
 class NN(object):
     """ 状態価値関数を予想する """
@@ -21,6 +22,7 @@ class NN(object):
             keras.layers.Dense(action_size, activation='softmax')
         ])
 
+        # TODO: 損失関数や最適化アルゴリズムを変更出来るようにする
         self.model.compile(optimizer='adam',
                            loss='sparse_categorical_crossentropy',
                            metrics=['accuracy']
@@ -35,6 +37,16 @@ class NN(object):
         :param label: 教師ラベル
         """
         self.model.fit(data, label, epochs=1)
+
+    def predict(self, data: any) -> List[float]:
+        """
+        現在の状態から最適な行動を予想する
+
+        :param data: 入力(現在の状態)
+        """
+
+        # NOTE: 出力値はそれぞれの行動を実施すべき確率
+        return self.model.predict(data)
 
     # TODO: モデルの保存部分を実装する
     #       後パスの型(str or pathlib.Path)を決める
@@ -60,9 +72,17 @@ class DQNAgent(object):
     """
     深層学習を用いて行動選択を行うエージェント
     """
+    # TODO: モデルの保存や読み込み部分を実装する
 
-    def __init__(self):
-        pass
+
+    def __init__(self, learning_rate: float, action_size: int) -> None:
+        """
+        初期化を実施
+
+        :param learning_rate: NNの学習率
+        :param action_size: 実施出来るアクションの数
+        """
+        self.model = NN(learning_rate, action_size)
 
     def get_action(self, data: Dict, observation_space: spaces) -> Action:
         """
