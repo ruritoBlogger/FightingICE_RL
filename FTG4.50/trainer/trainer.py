@@ -5,7 +5,8 @@ from memory import Memory
 class Trainer(object):
     """ 選手の学習や試合の状態を管理する """
 
-    # TODO: agentの基底クラスを実装してアップキャストする
+    # HACK: agentの基底クラスを実装してアップキャストする
+    #       ルールベースAIも読み込めるようにしておく
     def __init__(self, env: any, agent: any):
         """
         初期化
@@ -46,6 +47,7 @@ class Trainer(object):
 
             batch = self.memory.sample(batch_size)
 
+            # TODO: 学習させるときにenvを変形させる. その時のenvのlenを入れる
             inputs = np.zeros((batch_size, ))
             targets = np.zeros((batch_size, self.env.get_observation_space()))
 
@@ -56,6 +58,8 @@ class Trainer(object):
 
                 # TODO: [0]をつける意味を理解する
                 expect_Q = self.agent.model.predict(frame_data)[0]
+
+                # HACK: numpyに置き換える
                 next_action = expect_Q.index(max(expect_Q))
 
                 # TODO: [0]をつける意味を理解する
