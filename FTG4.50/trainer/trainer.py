@@ -71,17 +71,16 @@ class Trainer(object):
                 inputs[j: j+1] = frame_data
 
                 # TODO: [0]をつける意味を理解する
-                expect_Q = self.agent.model.predict(frame_data)[0]
+                expect_Q = self.agent.model.predict(next_frame_data)[0]
 
                 # HACK: numpyに置き換える
                 next_action = np.argmax(expect_Q)
 
                 # TODO: [0]をつける意味を理解する
-                target = reward + gamma * self.agent.model.predict(frame_data)[0][next_action]
+                target = reward + gamma * self.agent.model.predict(next_frame_data)[0][next_action]
 
-                # NOTE: 参考記事には[0]をつけてない
                 # TODO: 理論を理解する
-                targets[j] = self.agent.model.predict(frame_data)[0]
+                targets[j] = self.agent.model.predict(frame_data)
                 targets[j][action] = target
 
             self.agent.update(inputs, targets)
