@@ -1,6 +1,7 @@
 from typing import Dict, List, Union
 from gym import spaces
 from tensorflow import keras
+import numpy as np
 
 from action import Action
 from state import State
@@ -16,9 +17,10 @@ class NN(object):
         """
         self.learning_rate = learning_rate
 
-        # TODO: モデルの層の構成を簡単に変更出来るようにしておく
+        # HACK: モデルの層の構成を簡単に変更出来るようにしておく
+        # HACK: 途中のデータ数を決め打ちしないようにする
         self.model = keras.Sequential([
-            keras.layers.Dense(, activation='relu'),
+            keras.layers.Dense(action_size*2, activation='relu'),
             keras.layers.Dense(action_size, activation='softmax')
         ])
 
@@ -36,6 +38,9 @@ class NN(object):
         :param data: 教師データ
         :param label: 教師ラベル
         """
+        data = data[0]
+        label = label[0]
+
         self.model.fit(data, label, epochs=1)
 
     def predict(self, data: any) -> List[float]:
@@ -46,6 +51,8 @@ class NN(object):
         """
 
         # NOTE: 出力値はそれぞれの行動を実施すべき確率
+        # FIXME: ここで変形したくない
+        data = np.array(data)
         return self.model.predict(data)
 
     # TODO: モデルの保存部分を実装する
@@ -83,6 +90,7 @@ class DQNAgent(object):
         :param action_size: 実施出来るアクションの数
         """
         self.model = NN(learning_rate, action_size)
+        self.action_size = action_size
 
     def get_action(self, data: List[Union[int, float]], observation_space: spaces) -> Action:
         """
@@ -94,11 +102,11 @@ class DQNAgent(object):
 
         # TODO: ε-greedy法を実装する
 
-        action_value = self.model.predict(data)
+        # TODO: [0]をつける意味を理解する
+        action_value = self.model.predict(data)[0]
 
         # NOTE: 一番評価値が高い行動を選択する(Actionにキャストしておく)
-        # HACK: numpyに置き換える
-        best_action = Action(action_value.index(max(action_value)))
+        best_action = Action(np.argmax(action_value))
 
         return best_action
 
