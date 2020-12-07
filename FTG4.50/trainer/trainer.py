@@ -32,16 +32,16 @@ class Trainer(object):
         for i in range(episode):
 
             frame_data = self.env.reset()
+            # NOTE: 学習出来るように変形しておく
+            frame_data = self.env.flatten(frame_data)
             done = False
             self.memory = Memory()
 
-            state_len = 0
+            state_len = len(frame_data)
+            # NOTE: 後で削除する
+            tmp = 0
 
             while not done:
-                # NOTE: 学習出来るように変形しておく
-                frame_data = self.env.flatten(frame_data)
-                state_len = len(frame_data)
-
                 # TODO: 毎回get_observation_spaceを実行しないようにしておく
                 action = self.agent.get_action(frame_data, self.env.get_observation_space())
                 next_frame_data, reward, done, info = self.env.step(action)
@@ -54,12 +54,17 @@ class Trainer(object):
 
                 frame_data = next_frame_data
 
+                # NOTE: 後で削除する
+                tmp += 1
+                if tmp > 100:
+                    break
+
             batch = self.memory.sample(batch_size)
 
             # NOTE: 学習させるときにenvを変形させる. その時のenvのlenを入れる
             # FIXME: envのlenの管理方法を考える
             inputs = np.zeros((batch_size, state_len))
-            targets = np.zeros((batch_size, self.env.get_observation_space()))
+            targets = np.zeros((batch_size, self.agent.action_size))
 
             # ランダムに取り出した過去の行動記録から学習を実施(=experience replay)
             for j, (frame_data, action, reward, next_frame_data) in enumerate(batch):
@@ -69,12 +74,14 @@ class Trainer(object):
                 expect_Q = self.agent.model.predict(frame_data)[0]
 
                 # HACK: numpyに置き換える
-                next_action = expect_Q.index(max(expect_Q))
+                next_action = np.argmax(expect_Q)
 
                 # TODO: [0]をつける意味を理解する
                 target = reward + gamma * self.agent.model.predict(frame_data)[0][next_action]
 
-                targets[j] = self.agent.predict(frame_data)
+                # NOTE: 参考記事には[0]をつけてない
+                # TODO: 理論を理解する
+                targets[j] = self.agent.model.predict(frame_data)[0]
                 targets[j][action] = target
 
             self.agent.update(inputs, targets)
