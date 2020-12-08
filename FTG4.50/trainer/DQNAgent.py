@@ -24,6 +24,7 @@ def huberloss(y_true: any, y_pred: any) -> float:
     loss = tf.where(cond, L2, L1)
     return keras.mean(loss)
 
+# HACK: NNを別ファイルに分離させてもいい
 class NN(object):
     """ 状態価値関数を予想する """
     def __init__(self, learning_rate: float, action_size: int) -> None:
