@@ -105,8 +105,7 @@ class Observer(object):
 
         return data
 
-    # HACK: numpyに置き換える
-    def flatten(self, data: Dict) -> List[Union[int, float]]:
+    def flatten(self, data: Dict) -> np.ndarray:
         """
         NNに入力できるように配列に変形する
 
@@ -160,4 +159,4 @@ class Observer(object):
         result.append(data["opp"]["NextHitAreaNowX"])
         result.append(data["opp"]["NextHitAreaNowY"])
 
-        return result
+        return np.array(result)
