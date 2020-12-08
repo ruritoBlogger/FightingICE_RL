@@ -1,10 +1,28 @@
 from typing import Dict, List, Union
 from gym import spaces
+import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 
 from action import Action
 from state import State
+
+# HACK: any外す
+def huberloss(y_true: any, y_pred: any) -> float:
+    """
+    損失関数に用いるhuber関数を実装
+    参考https://github.com/jaara/AI-blog/blob/master/CartPole-DQN.py
+
+    :param y_true: 正解データ
+    :param y_pred: 予測データ
+    :return: 誤差
+    """
+    err = y_true - y_pred
+    cond = keras.abs(err) < 1.0
+    L2 = 0.5 * keras.square(err)
+    L1 = (keras.abs(err) - 0.5)
+    loss = tf.where(cond, L2, L1)
+    return keras.mean(loss)
 
 class NN(object):
     """ 状態価値関数を予想する """
@@ -26,7 +44,7 @@ class NN(object):
 
         # TODO: 損失関数や最適化アルゴリズムを変更出来るようにする
         self.model.compile(optimizer='adam',
-                           loss='sparse_categorical_crossentropy',
+                           loss=huberloss,
                            metrics=['accuracy']
                            )
 
