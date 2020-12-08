@@ -51,8 +51,8 @@ class NN(object):
         """
 
         # NOTE: 出力値はそれぞれの行動を実施すべき確率
-        # FIXME: ここで変形したくない
-        data = np.array(data)
+        # FIXME: 出力値が35*55になってるのでまともに動きません
+        #        予定では1*55になるはずでした
         return self.model.predict(data)
 
     # TODO: モデルの保存部分を実装する
@@ -102,7 +102,6 @@ class DQNAgent(object):
 
         # TODO: ε-greedy法を実装する
 
-        # TODO: [0]をつける意味を理解する
         action_value = self.model.predict(data)[0]
 
         # NOTE: 一番評価値が高い行動を選択する(Actionにキャストしておく)
