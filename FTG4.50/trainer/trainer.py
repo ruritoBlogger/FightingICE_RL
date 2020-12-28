@@ -36,10 +36,7 @@ class Trainer(object):
             frame_data = self.env.flatten(frame_data)
             done = False
             self.memory = Memory()
-
             state_len = len(frame_data)
-            # NOTE: 後で削除する
-            tmp = 0
 
             while not done:
                 # TODO: 毎回get_observation_spaceを実行しないようにしておく
@@ -53,11 +50,6 @@ class Trainer(object):
                 self.memory.add((frame_data, action, reward, next_frame_data))
 
                 frame_data = next_frame_data
-
-                # NOTE: 後で削除する
-                tmp += 1
-                if tmp > 100:
-                    break
 
             batch = self.memory.sample(batch_size)
 
