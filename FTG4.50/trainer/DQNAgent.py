@@ -57,15 +57,6 @@ class NN(object):
         :param label: 教師ラベル
         """
 
-        """
-        data = data[0]
-        label = label[0]
-        """
-
-        # HACK: 整形部分はここでやりたくない
-        data = np.array(data)
-        label = np.array(label)
-
         self.model.fit(data, label, epochs=1)
 
     def predict(self, data: any) -> List[float]:
@@ -77,8 +68,6 @@ class NN(object):
 
         # NOTE: 出力値はそれぞれの行動を実施すべき確率
         # HACK: 整形部分はここでやりたくない
-        data = np.array(data)
-        data = data[np.newaxis, :]
         return self.model.predict(data)
 
     # TODO: モデルの保存部分を実装する
@@ -131,9 +120,11 @@ class DQNAgent(object):
         action_value = self.model.predict(data)[0]
 
         # NOTE: 一番評価値が高い行動を選択する(Actionにキャストしておく)
-        best_action = Action(np.argmax(action_value))
+        # NOTE: +1しているのは列挙型が1startから？
+        best_action = Action(np.argmax(action_value)+1)
 
         return best_action
+
 
     def update(self, data: any, label: any) -> None:
         """
