@@ -76,8 +76,7 @@ class Trainer(object):
                 target = reward + gamma * self.agent.model.predict(next_frame_data)[0][next_action]
 
                 # TODO: 理論を理解する
-                print(self.agent.model.predict(frame_data))
-                targets[j] = self.agent.model.predict(frame_data)
+                targets[j] = self.agent.model.predict(frame_data)[0]
                 targets[j][action] = target
 
             self.agent.update(inputs, targets)

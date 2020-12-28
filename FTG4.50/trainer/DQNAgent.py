@@ -2,6 +2,9 @@ from typing import Dict, List, Union
 from gym import spaces
 import tensorflow as tf
 from tensorflow import keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
 import numpy as np
 
 from action import Action
@@ -18,11 +21,11 @@ def huberloss(y_true: any, y_pred: any) -> float:
     :return: 誤差
     """
     err = y_true - y_pred
-    cond = keras.abs(err) < 1.0
-    L2 = 0.5 * keras.square(err)
-    L1 = (keras.abs(err) - 0.5)
+    cond = keras.backend.abs(err) < 1.0
+    L2 = 0.5 * keras.backend.square(err)
+    L1 = (keras.backend.abs(err) - 0.5)
     loss = tf.where(cond, L2, L1)
-    return keras.mean(loss)
+    return keras.backend.mean(loss)
 
 # HACK: NNを別ファイルに分離させてもいい
 class NN(object):
@@ -38,16 +41,12 @@ class NN(object):
 
         # HACK: モデルの層の構成を簡単に変更出来るようにしておく
         # HACK: 途中のデータ数を決め打ちしないようにする
-        self.model = keras.Sequential([
-            keras.layers.Dense(action_size*2, activation='relu'),
-            keras.layers.Dense(action_size, activation='softmax')
-        ])
 
-        # TODO: 損失関数や最適化アルゴリズムを変更出来るようにする
-        self.model.compile(optimizer='adam',
-                           loss=huberloss,
-                           metrics=['accuracy']
-                           )
+        self.model = Sequential()
+        self.model.add(Dense(action_size, activation='relu', input_dim=35))
+        self.model.add(Dense(action_size, activation='relu'))
+        self.model.add(Dense(action_size, activation='linear'))
+        self.model.compile(loss=huberloss, optimizer='adam')
 
     # TODO: 入力データの型を決める
     def fit(self, data: any, label: any) -> None:
@@ -57,8 +56,15 @@ class NN(object):
         :param data: 教師データ
         :param label: 教師ラベル
         """
+
+        """
         data = data[0]
         label = label[0]
+        """
+
+        # HACK: 整形部分はここでやりたくない
+        data = np.array(data)
+        label = np.array(label)
 
         self.model.fit(data, label, epochs=1)
 
@@ -70,8 +76,9 @@ class NN(object):
         """
 
         # NOTE: 出力値はそれぞれの行動を実施すべき確率
-        # FIXME: 出力値が35*55になってるのでまともに動きません
-        #        予定では1*55になるはずでした
+        # HACK: 整形部分はここでやりたくない
+        data = np.array(data)
+        data = data[np.newaxis, :]
         return self.model.predict(data)
 
     # TODO: モデルの保存部分を実装する
