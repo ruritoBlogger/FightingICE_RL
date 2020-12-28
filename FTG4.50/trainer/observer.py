@@ -43,7 +43,6 @@ class Observer(object):
 
         return self.transform(self._env.reset(p2=self.p2))
 
-
     def transform(self, frame_data: np.ndarray) -> Dict:
         """
         フレームデータを使いやすいように変形する
@@ -113,50 +112,48 @@ class Observer(object):
         :return: 変形後のデータ
         """
 
-        # HACK: 予め配列の長さ分初期化しておいて代入する
-        #       現状だと速度が遅い
-
         # HACK: 入力データが多いので絞り込む
+        # HACK: magic numberを使わないようにする
 
-        result = []
-        result.append(data["self"]["HP"])
-        result.append(data["self"]["Energy"])
-        result.append(data["self"]["X"])
-        result.append(data["self"]["Y"])
-        result.append(data["self"]["SpeedX"])
-        result.append(data["self"]["AbsSpeedX"])
-        result.append(data["self"]["SpeedY"])
-        result.append(data["self"]["AbsSpeedY"])
-        result.append(data["self"]["CurrentAction"])
-        result.append(data["self"]["State"])
-        result.append(data["self"]["RemainingFrame"])
+        result = np.zeros((1, 35))
+        result[0][0] = data["self"]["HP"]
+        result[0][1] = data["self"]["Energy"]
+        result[0][2] = data["self"]["X"]
+        result[0][3] = data["self"]["Y"]
+        result[0][4] = data["self"]["SpeedX"]
+        result[0][5] = data["self"]["AbsSpeedX"]
+        result[0][6] = data["self"]["SpeedY"]
+        result[0][7] = data["self"]["AbsSpeedY"]
+        result[0][8] = data["self"]["CurrentAction"]
+        result[0][9] = data["self"]["State"]
+        result[0][10] = data["self"]["RemainingFrame"]
 
-        result.append(data["opp"]["HP"])
-        result.append(data["opp"]["Energy"])
-        result.append(data["opp"]["X"])
-        result.append(data["opp"]["Y"])
-        result.append(data["opp"]["SpeedX"])
-        result.append(data["opp"]["AbsSpeedX"])
-        result.append(data["opp"]["SpeedY"])
-        result.append(data["opp"]["AbsSpeedY"])
-        result.append(data["opp"]["CurrentAction"])
-        result.append(data["opp"]["State"])
-        result.append(data["opp"]["RemainingFrame"])
+        result[0][11] = data["opp"]["HP"]
+        result[0][11] = data["opp"]["Energy"]
+        result[0][12] = data["opp"]["X"]
+        result[0][13] = data["opp"]["Y"]
+        result[0][14] = data["opp"]["SpeedX"]
+        result[0][15] = data["opp"]["AbsSpeedX"]
+        result[0][16] = data["opp"]["SpeedY"]
+        result[0][17] = data["opp"]["AbsSpeedY"]
+        result[0][18] = data["opp"]["CurrentAction"]
+        result[0][19] = data["opp"]["State"]
+        result[0][20] = data["opp"]["RemainingFrame"]
 
-        result.append(data["frame_run"])
+        result[0][21] = data["frame_run"]
 
-        result.append(data["self"]["HitDamage"])
-        result.append(data["self"]["HitAreaNowX"])
-        result.append(data["self"]["HitAreaNowY"])
-        result.append(data["self"]["NextHitDamage"])
-        result.append(data["self"]["NextHitAreaNowX"])
-        result.append(data["self"]["NextHitAreaNowY"])
+        result[0][22] = data["self"]["HitDamage"]
+        result[0][23] = data["self"]["HitAreaNowX"]
+        result[0][24] = data["self"]["HitAreaNowY"]
+        result[0][25] = data["self"]["NextHitDamage"]
+        result[0][26] = data["self"]["NextHitAreaNowX"]
+        result[0][27] = data["self"]["NextHitAreaNowY"]
 
-        result.append(data["opp"]["HitDamage"])
-        result.append(data["opp"]["HitAreaNowX"])
-        result.append(data["opp"]["HitAreaNowY"])
-        result.append(data["opp"]["NextHitDamage"])
-        result.append(data["opp"]["NextHitAreaNowX"])
-        result.append(data["opp"]["NextHitAreaNowY"])
+        result[0][28] = data["opp"]["HitDamage"]
+        result[0][29] = data["opp"]["HitAreaNowX"]
+        result[0][30] = data["opp"]["HitAreaNowY"]
+        result[0][31] = data["opp"]["NextHitDamage"]
+        result[0][32] = data["opp"]["NextHitAreaNowX"]
+        result[0][33] = data["opp"]["NextHitAreaNowY"]
 
-        return np.array(result)
+        return result
