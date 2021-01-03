@@ -72,3 +72,5 @@ class Trainer(object):
                 targets[j][action] = target
 
             self.agent.update(inputs, targets)
+
+        self.agent.model.save('param.hdf5')

@@ -70,25 +70,21 @@ class NN(object):
         # HACK: 整形部分はここでやりたくない
         return self.model.predict(data)
 
-    # TODO: モデルの保存部分を実装する
-    #       後パスの型(str or pathlib.Path)を決める
-    def save_model(self, model_path: any):
+    def save_model(self, model_path: str):
         """
         モデルを保存する
 
         :param model_path: 保存先のパス
         """
-        pass
+        self.model.save_weights(model_path)
 
-    # TODO: モデルの読み込み部分を実装する
-    #       後パスの型(str or pathlib.Path)を決める
-    def load_model(self, model_path: any):
+    def load_model(self, model_path: str):
         """
         学習済みのモデルを読み込む
 
         :param model_path: 読み込みたいモデルのパス
         """
-        pass
+        self.model.load_weights(model_path)
 
 class DQNAgent(object):
     """
