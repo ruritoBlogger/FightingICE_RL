@@ -80,6 +80,10 @@ class Trainer(object):
             last_frame = self.memory.get_last_data()[0]
             reward_list.append(last_frame[0][0] - last_frame[0][11])
 
+            # 一時的な保存もしておく
+            if i%100 == 0:
+                self.agent.model.save_model('tmp.hdf5')
+
         self.agent.model.save_model('param.hdf5')
         self.create_image(reward_list, 'reward.png')
 

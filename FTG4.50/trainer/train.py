@@ -19,7 +19,7 @@ def main():
     p2 = "MctsAi"
     env = Observer(env, p2)
     agent = DQNAgent(learning_rate, action_size, greedy_value)
-    agent.model.load_model('param.hdf5')
+    # agent.model.load_model('param.hdf5')
     # agent = RoleBaseAgent()
     trainer = Trainer(env, agent)
 
