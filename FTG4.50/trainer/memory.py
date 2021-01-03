@@ -12,6 +12,16 @@ class Memory:
         """
         self.buffer = deque(maxlen=max_size)
 
+
+    # TODO: experienceの型を定義する
+    def get_last_data(self) -> any:
+        """
+        最後に保存した情報を返す
+
+        :return: 最後に保存した情報
+        """
+        return self.buffer[-1]
+
     # TODO: experienceの型を定義する
     def add(self, experience: any) -> None:
         """
