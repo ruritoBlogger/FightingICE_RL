@@ -9,7 +9,7 @@ from trainer import Trainer
 def main():
     env = gym.make("FightingiceDataNoFrameskip-v0", java_env_path="/home/rurito/lesson/ken/FTG4.50")
     # HACK: aciontから自動で取ってこれるようにしておく
-    action_size = 56
+    action_size = 55
     learning_rate = 0.1
     batch_size = 10
     episode = 3
