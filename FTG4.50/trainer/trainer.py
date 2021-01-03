@@ -30,6 +30,8 @@ class Trainer(object):
         :param gamma: 価値関数の値をどれだけ重要視するかどうか
         """
 
+        reward_list = []
+
         for i in range(episode):
 
             frame_data = self.env.reset()
@@ -72,9 +74,12 @@ class Trainer(object):
                 targets[j] = self.agent.model.predict(frame_data)[0]
                 targets[j][action] = target
 
+                reward_list.append(reward)
+
             self.agent.update(inputs, targets)
 
         self.agent.model.save('param.hdf5')
+        self.create_image(reward_list, 'reward.png')
 
     # HACK: anyを許さない
     def create_image(self, data: any, image_path: str) -> None:
