@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 from memory import Memory
 
@@ -74,3 +75,17 @@ class Trainer(object):
             self.agent.update(inputs, targets)
 
         self.agent.model.save('param.hdf5')
+
+    # HACK: anyを許さない
+    def create_image(self, data: any, image_path: str) -> None:
+        """
+        グラフを生成する
+
+        :param data: グラフにプロットしたいデータ
+        :param image_path: 画像の保存先
+        """
+
+        plt.clf()
+        x = range(len(data))
+        plt.plot(x, data)
+        plt.savefig(image_path)
