@@ -4,8 +4,8 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-
 import numpy as np
+import random
 
 from action import Action
 from state import State
@@ -93,15 +93,17 @@ class DQNAgent(object):
     # TODO: モデルの保存や読み込み部分を実装する
 
 
-    def __init__(self, learning_rate: float, action_size: int) -> None:
+    def __init__(self, learning_rate: float, action_size: int, greedy_value: float) -> None:
         """
         初期化を実施
 
         :param learning_rate: NNの学習率
         :param action_size: 実施出来るアクションの数
+        :param greedy_value: グリーディー法を実施するかどうかの確率
         """
         self.model = NN(learning_rate, action_size)
         self.action_size = action_size
+        self.greedy_value = greedy_value
 
     def get_action(self, data: List[Union[int, float]], observation_space: spaces) -> Action:
         """
@@ -111,7 +113,10 @@ class DQNAgent(object):
         :return: 行動(int)
         """
 
-        # TODO: ε-greedy法を実装する
+        key = random.random()
+        if key < self.greedy_value:
+            random_action_value = random.randint(0, self.action_size)
+            return random_action_value
 
         action_value = self.model.predict(data)[0]
 

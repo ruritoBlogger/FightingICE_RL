@@ -14,10 +14,12 @@ def main():
     batch_size = 10
     episode = 3
     gamma = 0.1
+    greedy_value = 0.3
 
     p2 = "MctsAi"
     env = Observer(env, p2)
-    agent = DQNAgent(learning_rate, action_size)
+    agent = DQNAgent(learning_rate, action_size, greedy_value)
+    agent.model.load_model('param.hdf5')
     # agent = RoleBaseAgent()
     trainer = Trainer(env, agent)
 
