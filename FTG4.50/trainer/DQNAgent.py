@@ -115,8 +115,8 @@ class DQNAgent(object):
 
         key = random.random()
         if key < self.greedy_value:
-            random_action_value = random.randint(0, self.action_size)
-            return random_action_value
+            random_action_value = random.randint(0, self.action_size-2)
+            return Action(random_action_value+1)
 
         action_value = self.model.predict(data)[0]
 
