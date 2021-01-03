@@ -39,7 +39,7 @@ class Trainer(object):
             frame_data = self.env.flatten(frame_data)
             done = False
             self.memory = Memory()
-            state_len = len(frame_data)
+            state_len = len(frame_data[0])
 
             while not done:
                 # TODO: 毎回get_observation_spaceを実行しないようにしておく
@@ -74,9 +74,11 @@ class Trainer(object):
                 targets[j] = self.agent.model.predict(frame_data)[0]
                 targets[j][action] = target
 
-                reward_list.append(reward)
-
             self.agent.update(inputs, targets)
+
+            # NOTE: 試合が終了した際の敵と味方のHPの差を保存する
+            last_frame = self.memory.get_last_data()[0]
+            reward_list.append(last_frame[0][0] - last_frame[0][11])
 
         self.agent.model.save('param.hdf5')
         self.create_image(reward_list, 'reward.png')
