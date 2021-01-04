@@ -78,7 +78,7 @@ class Trainer(object):
             last_frame = self.memory.get_last_data()[0]
             # reward_list.append(last_frame[0][0] - last_frame[0][11])
             with open('result_data.txt', mode='a') as f:
-                f.write(str(last_frame[0][0] - last_frame[0][11]))
+                f.write(str(last_frame[0][0] - last_frame[0][11]) + '\n')
 
             # 一時的な保存もしておく
             self.agent.model.save_model('tmp.hdf5')
