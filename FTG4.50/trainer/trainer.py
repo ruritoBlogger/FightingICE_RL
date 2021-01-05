@@ -68,9 +68,9 @@ class Trainer(object):
                 next_action = np.argmax(expect_Q)
                 target = reward + gamma * self.agent.model.predict(next_frame_data)[0][next_action]
 
-                # TODO: 理論を理解する
                 targets[j] = self.agent.model.predict(frame_data)[0]
-                targets[j][action] = target
+                # NOTE: actionは列挙型に依存していて1スタートのため
+                targets[j][action-1] = target
 
             self.agent.update(inputs, targets)
 
