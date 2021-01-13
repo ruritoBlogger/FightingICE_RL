@@ -85,6 +85,15 @@ class NN(object):
         :param model_path: 読み込みたいモデルのパス
         """
         self.model.load_weights(model_path)
+    
+    def sync_model(self, another_model: any):
+        """
+        他のモデルの情報を読み込む
+
+        :param another_model: 他のモデル
+        """
+
+        self.model.set_weights(another_model.model.get_weights())
 
 class DQNAgent(object):
     """

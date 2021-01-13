@@ -94,7 +94,7 @@ class Trainer(object):
             self.agent.model.save_model('tmp.hdf5')
 
             # target_modelの更新を行う
-            self.agent.target_model.set_weights(self.agent.model.get_weights())
+            self.agent.target_model.sync_model(self.agent.model)
 
         self.agent.model.save_model('param.hdf5')
         # self.create_image(reward_list, 'reward.png')
