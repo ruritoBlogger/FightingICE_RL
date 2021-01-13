@@ -38,6 +38,8 @@ class Trainer(object):
             done = False
             self.memory = Memory()
             state_len = len(frame_data[0])
+            reward_amount = 0
+            total_reward = 0
 
             while not done:
                 # TODO: 毎回get_observation_spaceを実行しないようにしておく
@@ -51,6 +53,9 @@ class Trainer(object):
                 self.memory.add((frame_data, action, reward, next_frame_data))
 
                 frame_data = next_frame_data
+
+                reward_amount += 1
+                total_reward += reward
 
             batch = self.memory.sample(batch_size)
 
@@ -77,8 +82,13 @@ class Trainer(object):
             # NOTE: 試合が終了した際の敵と味方のHPの差を保存する
             last_frame = self.memory.get_last_data()[0]
             # reward_list.append(last_frame[0][0] - last_frame[0][11])
+            """
             with open('result_data.txt', mode='a') as f:
                 f.write(str(last_frame[0][0] - last_frame[0][11]) + '\n')
+            """
+            with open('reward_data.txt', mode='a') as f:
+                f.write(str(total_reward/reward_amount) + '\n')
+
 
             # 一時的な保存もしておく
             self.agent.model.save_model('tmp.hdf5')
