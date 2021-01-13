@@ -71,7 +71,7 @@ class Trainer(object):
                 expect_Q = self.agent.model.predict(next_frame_data)[0]
                 # HACK: numpyに置き換える
                 next_action = np.argmax(expect_Q)
-                target = reward + gamma * self.agent.model.predict(next_frame_data)[0][next_action]
+                target = reward + gamma * self.agent.target_model.predict(next_frame_data)[0][next_action]
 
                 targets[j] = self.agent.model.predict(frame_data)[0]
                 # NOTE: actionは列挙型に依存していて1スタートのため
@@ -92,6 +92,9 @@ class Trainer(object):
 
             # 一時的な保存もしておく
             self.agent.model.save_model('tmp.hdf5')
+
+            # target_modelの更新を行う
+            self.agent.target_model.set_weights(self.agent.model.get_weights())
 
         self.agent.model.save_model('param.hdf5')
         # self.create_image(reward_list, 'reward.png')

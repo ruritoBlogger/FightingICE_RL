@@ -102,6 +102,7 @@ class DQNAgent(object):
         :param greedy_value: グリーディー法を実施するかどうかの確率
         """
         self.model = NN(learning_rate, action_size)
+        self.target_model = NN(learning_rate, action_size)
         self.action_size = action_size
         self.greedy_value = greedy_value
 
